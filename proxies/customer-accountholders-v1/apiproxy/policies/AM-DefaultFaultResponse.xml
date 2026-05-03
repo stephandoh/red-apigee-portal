@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-DefaultFaultResponse">
+  <DisplayName>AM-DefaultFaultResponse</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{"statusCode":"5000","statusMessage":"{fault.name}","supportMessage":"{fault.type}: {fault.name}","transactionId":"{request.header.transactionId}","timestamp":"{system.timestamp}","path":"{request.uri}","method":"{request.verb}"}</Payload>
+    <StatusCode>500</StatusCode>
+    <ReasonPhrase>Internal Server Error</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
