@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="payment-payments-v1">
+  <ConfigurationVersion minorVersion="0" majorVersion="4"/>
+  <Description>MTN Ghana Payments API — payments, reversals, status and fees</Description>
+  <DisplayName>payment-payments-v1</DisplayName>
+  <Policies>
+    <Policy>FC-SecurityCommon</Policy>
+    <Policy>JSONTP-RequestBodyProtection</Policy>
+    <Policy>RF-MissingCountryCode</Policy>
+    <Policy>AM-Mock-ProcessPayment</Policy>
+    <Policy>AM-Mock-ReversePayment</Policy>
+    <Policy>AM-Mock-TransactionStatus</Policy>
+    <Policy>AM-Mock-CalculateFee</Policy>
+    <Policy>AM-DefaultFaultResponse</Policy>
+    <Policy>RF-404NotFound</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <TargetServers/>
+  <Resources/>
+</APIProxy>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-404NotFound">
+  <FaultResponse>
+    <Set>
+      <Payload contentType="application/json">{"statusCode":"4004","statusMessage":"Resource not found","supportMessage":"The requested path does not exist","transactionId":"{request.header.transactionId}","timestamp":"{system.timestamp}","path":"{request.uri}","method":"{request.verb}"}</Payload>
+      <StatusCode>404</StatusCode>
+      <ReasonPhrase>Not Found</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-CalculateFee">
+  <DisplayName>AM-Mock-CalculateFee</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "FEE-2026-001",
+  "data": {
+    "fee": {"amount": 1.50, "units": "GHS"},
+    "tax": {"amount": 0.20, "units": "GHS"},
+    "totalFee": {"amount": 1.70, "units": "GHS"},
+    "currency": "GHS"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

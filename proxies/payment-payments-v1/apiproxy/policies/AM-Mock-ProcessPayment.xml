@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-ProcessPayment">
+  <DisplayName>AM-Mock-ProcessPayment</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "providerTransactionId": "PAY-233244000001-001",
+  "transactionId": "TXN-2026-001",
+  "data": {
+    "status": "SUCCESSFUL",
+    "amount": {"amount": 100.00, "units": "GHS"},
+    "customerId": "233244000001",
+    "receiverId": "233244000002",
+    "completedAt": "2026-05-03T10:00:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

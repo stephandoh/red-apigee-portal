@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-MissingCountryCode">
+  <FaultResponse>
+    <Set>
+      <Payload contentType="application/json">{"statusCode":"4000","statusMessage":"Bad Request","supportMessage":"countryCode header is required","transactionId":"{request.header.transactionId}","timestamp":"{system.timestamp}","path":"{request.uri}","method":"{request.verb}"}</Payload>
+      <StatusCode>400</StatusCode>
+      <ReasonPhrase>Bad Request</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

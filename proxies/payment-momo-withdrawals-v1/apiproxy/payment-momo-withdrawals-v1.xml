@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="payment-momo-withdrawals-v1">
+  <ConfigurationVersion minorVersion="0" majorVersion="4"/>
+  <Description>MTN Ghana Mobile Money Withdrawals API</Description>
+  <DisplayName>payment-momo-withdrawals-v1</DisplayName>
+  <Policies>
+    <Policy>FC-SecurityCommon</Policy>
+    <Policy>JSONTP-RequestBodyProtection</Policy>
+    <Policy>AM-Mock-Withdraw</Policy>
+    <Policy>AM-DefaultFaultResponse</Policy>
+    <Policy>RF-404NotFound</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <TargetServers/>
+  <Resources/>
+</APIProxy>
