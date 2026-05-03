@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-VerifyAccountholder">
+  <DisplayName>AM-Mock-VerifyAccountholder</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "7f3d2a1b-4e5c-6d7e-8f9a-0b1c2d3e4f5c",
+  "data": {
+    "verificationStatus": "VERIFIED",
+    "accountholderids": [
+      {"id": "233244000001", "status": "VERIFIED", "balance": {"amount": 500.00, "units": "GHS"}}
+    ]
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

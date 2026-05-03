@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="customer-accountholders-v1">
+  <ConfigurationVersion minorVersion="0" majorVersion="4"/>
+  <Description>MTN Ghana AccountHolders API — profile, validation and verification</Description>
+  <DisplayName>customer-accountholders-v1</DisplayName>
+  <Policies>
+    <Policy>FC-SecurityCommon</Policy>
+    <Policy>RegexTP-ValidateMSISDN</Policy>
+    <Policy>JSONTP-RequestBodyProtection</Policy>
+    <Policy>AM-Mock-AccountholderProfile</Policy>
+    <Policy>AM-Mock-ValidateAccountholder</Policy>
+    <Policy>AM-Mock-VerifyAccountholder</Policy>
+    <Policy>AM-DefaultFaultResponse</Policy>
+    <Policy>RF-404NotFound</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <TargetServers/>
+  <Resources/>
+</APIProxy>
