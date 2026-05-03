@@ -3,6 +3,6 @@
   <DisplayName>RegexTP-ValidateMSISDN</DisplayName>
   <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
   <URIPath>
-    <Pattern>.*\/consent\/2[0-9]{11}.*</Pattern>
+    <Pattern>[\s]*(?i)((delete)|(exec)|(drop\s*table)|(insert)|(shutdown)|(update)|(\bor\b))</Pattern>
   </URIPath>
 </RegularExpressionProtection>
