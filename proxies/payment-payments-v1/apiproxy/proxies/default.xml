@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description/>
+  <FaultRules>
+    <FaultRule name="DefaultFault">
+      <Step><Name>AM-DefaultFaultResponse</Name></Step>
+    </FaultRule>
+  </FaultRules>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step><Name>FC-SecurityCommon</Name></Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <Flows>
+    <Flow name="processPayment">
+      <Description>Process payment to service providers</Description>
+      <Request>
+        <Step>
+          <Condition>request.header.countryCode = null</Condition>
+          <Name>RF-MissingCountryCode</Name>
+        </Step>
+        <Step><Name>JSONTP-RequestBodyProtection</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Mock-ProcessPayment</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/payments") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="reversePayment">
+      <Description>Reverse a payment</Description>
+      <Request>
+        <Step><Name>JSONTP-RequestBodyProtection</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Mock-ReversePayment</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/reverse-payment") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="getTransactionStatus">
+      <Description>Get payment transaction status</Description>
+      <Request/>
+      <Response>
+        <Step><Name>AM-Mock-TransactionStatus</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/status/*") and (request.verb = "GET")</Condition>
+    </Flow>
+    <Flow name="calculateFee">
+      <Description>Calculate payment transfer fees</Description>
+      <Request>
+        <Step><Name>JSONTP-RequestBodyProtection</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Mock-CalculateFee</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/fee") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="404NotFound">
+      <Description>Catch all unmatched paths</Description>
+      <Request>
+        <Step><Name>RF-404NotFound</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+  </Flows>
+  <HTTPProxyConnection>
+    <BasePath>/payment/payments/v1</BasePath>
+    <Properties/>
+  </HTTPProxyConnection>
+  <RouteRule name="NoRoute">
+    <Condition>true == false</Condition>
+  </RouteRule>
+</ProxyEndpoint>

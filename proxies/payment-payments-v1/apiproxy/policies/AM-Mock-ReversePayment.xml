@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-ReversePayment">
+  <DisplayName>AM-Mock-ReversePayment</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "providerTransactionId": "REV-233244000001-001",
+  "transactionId": "TXN-2026-001",
+  "data": {
+    "status": "REVERSED",
+    "originalTransactionId": "PAY-233244000001-001",
+    "reversedAt": "2026-05-03T11:00:00Z",
+    "amount": {"amount": 100.00, "units": "GHS"}
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

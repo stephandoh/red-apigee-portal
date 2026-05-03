@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description/>
+  <FaultRules>
+    <FaultRule name="DefaultFault">
+      <Step><Name>AM-DefaultFaultResponse</Name></Step>
+    </FaultRule>
+  </FaultRules>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step><Name>FC-SecurityCommon</Name></Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <Flows>
+    <Flow name="createWithdrawal">
+      <Description>Execute a withdrawal request</Description>
+      <Request>
+        <Step><Name>JSONTP-RequestBodyProtection</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Mock-Withdraw</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/withdraw") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="404NotFound">
+      <Description>Catch all unmatched paths</Description>
+      <Request>
+        <Step><Name>RF-404NotFound</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+  </Flows>
+  <HTTPProxyConnection>
+    <BasePath>/payment/withdrawals/v1</BasePath>
+    <Properties/>
+  </HTTPProxyConnection>
+  <RouteRule name="NoRoute">
+    <Condition>true == false</Condition>
+  </RouteRule>
+</ProxyEndpoint>

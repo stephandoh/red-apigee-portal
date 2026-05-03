@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="default">
+  <Description>No target — mock responses used</Description>
+  <HTTPTargetConnection>
+    <URL>https://httpbin.org/anything</URL>
+  </HTTPTargetConnection>
+</TargetEndpoint>

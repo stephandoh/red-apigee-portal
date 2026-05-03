@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-Withdraw">
+  <DisplayName>AM-Mock-Withdraw</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "providerTransactionId": "FT-233244000001-001",
+  "data": {
+    "transactionId": "WD-2026-233244000001-001",
+    "newBalance": {
+      "amount": 450.00,
+      "units": "GHS"
+    },
+    "transactionNote": "Withdrawal processed successfully",
+    "status": "Approved",
+    "additionalInformation": {
+      "name": "WithdrawalRef",
+      "description": "MoMo withdrawal for customer 233244000001"
+    }
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
