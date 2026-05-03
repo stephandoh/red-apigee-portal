@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="oauth-v1">
+  <ConfigurationVersion minorVersion="0" majorVersion="4"/>
+  <Description>OAuth 2.0 client credentials token proxy</Description>
+  <DisplayName>oauth-v1</DisplayName>
+  <Policies>
+    <Policy>OA2-Generate-Token-CC-Form</Policy>
+    <Policy>AM-Access-Token-Response-CC-Form</Policy>
+    <Policy>AM-Assign-401-Error-Variables</Policy>
+    <Policy>AM-Assign-404-Error-Variables</Policy>
+    <Policy>AM-Set-Default-Error-Response</Policy>
+    <Policy>SA-Auth-Traffic-Smoother</Policy>
+    <Policy>RF-Empty-Fault</Policy>
+    <Policy>CORS-AddCORS</Policy>
+  </Policies>
+  <ProxyEndpoints>
+    <ProxyEndpoint>default</ProxyEndpoint>
+  </ProxyEndpoints>
+  <Resources/>
+  <TargetServers/>
+</APIProxy>

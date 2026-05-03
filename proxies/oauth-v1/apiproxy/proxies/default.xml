@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <DefaultFaultRule name="all">
+    <AlwaysEnforce>true</AlwaysEnforce>
+    <Step>
+      <Condition>
+        (fault.name = "UnSupportedGrantType") or
+        (fault.name = "MissingParameter") or
+        (fault.name = "InvalidTokenType") or
+        (fault.name = "InvalidParameter") or
+        (fault.name = "InvalidAccessToken") or
+        (fault.name = "invalid_request") or
+        (fault.name = "invalid_client") or
+        (fault.name = "InvalidClientIdentifier") or
+        (fault.name = "invalid_access_token") or
+        (fault.name = "InsufficientScope") or
+        (fault.name = "FailedToResolveToken") or
+        (fault.name = "FailedToResolveClientId") or
+        (fault.name = "FailedToResolveAccessToken") or
+        (fault.name = "access_token_expired")
+      </Condition>
+      <Name>AM-Assign-401-Error-Variables</Name>
+    </Step>
+    <Step>
+      <Name>AM-Set-Default-Error-Response</Name>
+    </Step>
+  </DefaultFaultRule>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step><Name>CORS-AddCORS</Name></Step>
+      <Step><Name>SA-Auth-Traffic-Smoother</Name></Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <Flows>
+    <Flow name="POST /token cc grant">
+      <Request>
+        <Step><Name>OA2-Generate-Token-CC-Form</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Access-Token-Response-CC-Form</Name></Step>
+      </Response>
+      <Condition>
+        (proxy.pathsuffix MatchesPath "/token") and
+        (request.verb = "POST") and
+        (request.formparam.grant_type = "client_credentials")
+      </Condition>
+    </Flow>
+    <Flow name="Default 404">
+      <Request>
+        <Step><Name>AM-Assign-404-Error-Variables</Name></Step>
+        <Step><Name>RF-Empty-Fault</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+  </Flows>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <HTTPProxyConnection>
+    <BasePath>/oauth/v1</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="noroute"/>
+</ProxyEndpoint>

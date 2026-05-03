@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OAuthV2 continueOnError="false" enabled="true" name="OA2-Generate-Token-CC-Form">
+  <Description>RFC6759 - Section 4.4 Client Credentials Grant</Description>
+  <Operation>GenerateAccessToken</Operation>
+  <ExpiresIn>3600000</ExpiresIn>
+  <ExternalAuthorization>false</ExternalAuthorization>
+  <GenerateResponse enabled="false"/>
+  <SupportedGrantTypes>
+    <GrantType>client_credentials</GrantType>
+  </SupportedGrantTypes>
+</OAuthV2>

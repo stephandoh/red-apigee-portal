@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Access-Token-Response-CC-Form">
+  <Set>
+    <Payload contentType="application/json" variablePrefix="%" variableSuffix="#">
+      {"access_token":"%oauthv2accesstoken.OA2-Generate-Token-CC-Form.access_token#","token_type":"Bearer","expires_in":"%oauthv2accesstoken.OA2-Generate-Token-CC-Form.expires_in#","scope":"%oauthv2accesstoken.OA2-Generate-Token-CC-Form.scope#"}
+    </Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo type="response" transport="http" createNew="true"/>
+</AssignMessage>

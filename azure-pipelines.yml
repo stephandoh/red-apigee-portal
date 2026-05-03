@@ -104,6 +104,7 @@ stages:
                 echo "${SF_NAME} deployed to ${ENV}"
               }
 
+              deploy_proxy "oauth-v1" "proxies/oauth-v1" "$(EVAL_ENV)"
               deploy_sf "security-common" "sharedflows/security-common" "$(EVAL_ENV)"
               deploy_proxy "customer-accountholders-v1" "proxies/customer-accountholders-v1" "$(EVAL_ENV)"
               deploy_proxy "customer-consent-validation-v1" "proxies/customer-consent-validation-v1" "$(EVAL_ENV)"
@@ -204,6 +205,7 @@ stages:
                       echo "${SF_NAME} deployed to ${ENV}"
                     }
 
+                    deploy_proxy "oauth-v1" "proxies/oauth-v1" "$(PREPROD_ENV)"
                     deploy_sf "security-common" "sharedflows/security-common" "$(PREPROD_ENV)"
                     deploy_proxy "customer-accountholders-v1" "proxies/customer-accountholders-v1" "$(PREPROD_ENV)"
                     deploy_proxy "customer-consent-validation-v1" "proxies/customer-consent-validation-v1" "$(PREPROD_ENV)"

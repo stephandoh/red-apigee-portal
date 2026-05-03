@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Set-Default-Error-Response">
+  <Set>
+    <Payload contentType="application/json" variablePrefix="@" variableSuffix="#">{
+    "errorResponse": {
+        "code": "@flow.error.code#",
+        "message": "@flow.error.message#",
+        "info": "@flow.error.info#"
+    }
+}</Payload>
+    <StatusCode>{flow.error.status}</StatusCode>
+    <ReasonPhrase>{flow.error.reason}</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
