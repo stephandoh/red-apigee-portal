@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-CreatePreapproval">
+  <DisplayName>AM-Mock-CreatePreapproval</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+  "data": {
+    "preapprovalId": "PRE-233244000001-001",
+    "status": "APPROVED",
+    "customerId": "233244000001",
+    "currency": "GHS",
+    "approvedAt": "2026-05-03T10:00:00Z",
+    "expiresAt": "2026-06-03T10:00:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
