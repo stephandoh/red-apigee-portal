@@ -71,7 +71,5 @@
     <BasePath>/payment/payments/v1</BasePath>
     <Properties/>
   </HTTPProxyConnection>
-  <RouteRule name="NoRoute">
-    <Condition>true == false</Condition>
-  </RouteRule>
+  <RouteRule name="NoRoute"/>
 </ProxyEndpoint>
