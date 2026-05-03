@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlowBundle revision="1" name="security-common">
+  <ConfigurationVersion minorVersion="0" majorVersion="4"/>
+  <Description>Common security policies for RED Ghana Portal proxies</Description>
+  <DisplayName>security-common</DisplayName>
+  <Policies>
+    <Policy>CORS-AddCORS</Policy>
+    <Policy>SA-SpikeArrest</Policy>
+    <Policy>OAuthV2-VerifyToken</Policy>
+    <Policy>AM-RemoveAuth</Policy>
+    <Policy>AM-SetTransactionId</Policy>
+  </Policies>
+  <SharedFlows>
+    <SharedFlow>default</SharedFlow>
+  </SharedFlows>
+</SharedFlowBundle>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+  <Step><Name>CORS-AddCORS</Name></Step>
+  <Step><Name>SA-SpikeArrest</Name></Step>
+  <Step><Name>OAuthV2-VerifyToken</Name></Step>
+  <Step><Name>AM-RemoveAuth</Name></Step>
+  <Step><Name>AM-SetTransactionId</Name></Step>
+</SharedFlow>
