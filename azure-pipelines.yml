@@ -1,0 +1,292 @@
+cd ~/red-apigee-portal
+
+cat > azure-pipelines.yml << 'EOF'
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  PROJECT_ID: 'red-apigee-portal'
+  EVAL_ENV: 'eval'
+  PREPROD_ENV: 'preprod'
+  EVAL_HOST: '34.110.219.0.nip.io'
+  PREPROD_HOST: 'preprod.34.110.219.0.nip.io'
+  WITHDRAWALS_DEPLOY_TO_PREPROD: 'true'
+
+stages:
+
+  # ── STAGE 1: Validate ─────────────────────────────────────
+  - stage: Validate
+    displayName: 'Validate proxy bundles'
+    jobs:
+      - job: ValidateXML
+        displayName: 'Validate XML files'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - script: |
+              sudo apt-get install -y libxml2-utils
+              echo "Validating XML files..."
+              find proxies sharedflows -name "*.xml" | while read f; do
+                xmllint --noout "$f" 2>&1
+                if [ $? -ne 0 ]; then
+                  echo "INVALID XML: $f"
+                  exit 1
+                fi
+                echo "OK: $f"
+              done
+              echo "All XML files valid"
+            displayName: 'Validate XML syntax'
+
+  # ── STAGE 2: Deploy to eval (dev) ─────────────────────────
+  - stage: DeployEval
+    displayName: 'Deploy to eval (dev)'
+    dependsOn: Validate
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: DeployToEval
+        displayName: 'Deploy all proxies to eval'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - script: |
+              set -e
+
+              echo "=== Authenticating ==="
+              printf '%s' "$GCP_SERVICE_ACCOUNT_KEY_B64" | base64 -d > /tmp/sa-key.json
+              python3 -c "import json; d=json.load(open('/tmp/sa-key.json')); print('SA:', d['client_email'])"
+              gcloud auth activate-service-account --key-file=/tmp/sa-key.json
+              gcloud config set project $(PROJECT_ID)
+              echo "Active: $(gcloud config get-value account)"
+
+              ACCESS_TOKEN=$(gcloud auth print-access-token)
+              echo "Token length: ${#ACCESS_TOKEN}"
+
+              deploy_proxy() {
+                PROXY_NAME=$1
+                PROXY_DIR=$2
+                ENV=$3
+                echo "=== Deploying ${PROXY_NAME} to ${ENV} ==="
+                cd ${PROXY_DIR}
+                zip -r /tmp/${PROXY_NAME}.zip apiproxy/
+                cd -
+
+                RESPONSE=$(curl -s -X POST \
+                  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                  -F "file=@/tmp/${PROXY_NAME}.zip" \
+                  "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/apis?action=import&name=${PROXY_NAME}")
+                echo "Import: $RESPONSE"
+
+                REVISION=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['revision'])")
+                echo "Revision: $REVISION"
+
+                DEPLOY=$(curl -s -X POST \
+                  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                  -H "Content-Type: application/json" \
+                  "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/environments/${ENV}/apis/${PROXY_NAME}/revisions/${REVISION}/deployments?override=true")
+                echo "Deploy: $DEPLOY"
+                echo "${PROXY_NAME} deployed to ${ENV}"
+              }
+
+              deploy_sf() {
+                SF_NAME=$1
+                SF_DIR=$2
+                ENV=$3
+                echo "=== Deploying shared flow ${SF_NAME} to ${ENV} ==="
+                cd ${SF_DIR}
+                zip -r /tmp/${SF_NAME}.zip sharedflowbundle/
+                cd -
+
+                RESPONSE=$(curl -s -X POST \
+                  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                  -F "file=@/tmp/${SF_NAME}.zip" \
+                  "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/sharedflows?action=import&name=${SF_NAME}")
+                echo "Import: $RESPONSE"
+
+                REVISION=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['revision'])")
+
+                curl -s -X POST \
+                  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                  -H "Content-Type: application/json" \
+                  "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/environments/${ENV}/sharedflows/${SF_NAME}/revisions/${REVISION}/deployments?override=true"
+                echo "${SF_NAME} deployed to ${ENV}"
+              }
+
+              # Deploy shared flow first
+              deploy_sf "security-common" "sharedflows/security-common" "$(EVAL_ENV)"
+
+              # Deploy all 4 proxies
+              deploy_proxy "customer-accountholders-v1" "proxies/customer-accountholders-v1" "$(EVAL_ENV)"
+              deploy_proxy "customer-consent-validation-v1" "proxies/customer-consent-validation-v1" "$(EVAL_ENV)"
+              deploy_proxy "payment-momo-withdrawals-v1" "proxies/payment-momo-withdrawals-v1" "$(EVAL_ENV)"
+              deploy_proxy "payment-payments-v1" "proxies/payment-payments-v1" "$(EVAL_ENV)"
+
+              echo "=== All proxies deployed to eval ==="
+            displayName: 'Deploy to eval'
+            env:
+              GCP_SERVICE_ACCOUNT_KEY_B64: $(GCP_SERVICE_ACCOUNT_KEY_B64)
+
+  # ── STAGE 3: Smoke Test eval ──────────────────────────────
+  - stage: SmokeTestEval
+    displayName: 'Smoke test eval'
+    dependsOn: DeployEval
+    condition: succeeded()
+    jobs:
+      - job: SmokeTestEval
+        displayName: 'Run smoke tests against eval'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - script: |
+              set -e
+              printf '%s' "$GCP_SERVICE_ACCOUNT_KEY_B64" | base64 -d > /tmp/sa-key.json
+              gcloud auth activate-service-account --key-file=/tmp/sa-key.json
+              gcloud config set project $(PROJECT_ID)
+
+              APP_KEY=$(gcloud secrets versions access latest \
+                --secret="red-app-key" --project=$(PROJECT_ID))
+              APP_SECRET=$(gcloud secrets versions access latest \
+                --secret="red-app-secret" --project=$(PROJECT_ID))
+
+              TOKEN=$(curl -q -s \
+                -u "${APP_KEY}:${APP_SECRET}" \
+                -H 'Content-Type: application/x-www-form-urlencoded' \
+                -X POST "https://$(EVAL_HOST)/oauth/v1/token" \
+                -d 'grant_type=client_credentials' \
+                | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+
+              echo "Token acquired: ${TOKEN:0:8}..."
+              bash tests/smoke-test.sh $(EVAL_HOST) $TOKEN
+            displayName: 'Smoke test eval'
+            env:
+              GCP_SERVICE_ACCOUNT_KEY_B64: $(GCP_SERVICE_ACCOUNT_KEY_B64)
+
+  # ── STAGE 4: Deploy to preprod (approval gate) ────────────
+  - stage: DeployPreprod
+    displayName: 'Deploy to preprod'
+    dependsOn: SmokeTestEval
+    condition: succeeded()
+    jobs:
+      - deployment: DeployToPreprod
+        displayName: 'Deploy all proxies to preprod'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'preprod'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - script: |
+                    set -e
+
+                    printf '%s' "$GCP_SERVICE_ACCOUNT_KEY_B64" | base64 -d > /tmp/sa-key.json
+                    gcloud auth activate-service-account --key-file=/tmp/sa-key.json
+                    gcloud config set project $(PROJECT_ID)
+                    ACCESS_TOKEN=$(gcloud auth print-access-token)
+
+                    deploy_proxy() {
+                      PROXY_NAME=$1
+                      PROXY_DIR=$2
+                      ENV=$3
+                      echo "=== Deploying ${PROXY_NAME} to ${ENV} ==="
+                      cd ${PROXY_DIR}
+                      zip -r /tmp/${PROXY_NAME}.zip apiproxy/
+                      cd -
+
+                      RESPONSE=$(curl -s -X POST \
+                        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                        -F "file=@/tmp/${PROXY_NAME}.zip" \
+                        "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/apis?action=import&name=${PROXY_NAME}")
+                      REVISION=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['revision'])")
+
+                      curl -s -X POST \
+                        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/environments/${ENV}/apis/${PROXY_NAME}/revisions/${REVISION}/deployments?override=true"
+                      echo "${PROXY_NAME} deployed to ${ENV}"
+                    }
+
+                    deploy_sf() {
+                      SF_NAME=$1
+                      SF_DIR=$2
+                      ENV=$3
+                      cd ${SF_DIR}
+                      zip -r /tmp/${SF_NAME}.zip sharedflowbundle/
+                      cd -
+
+                      RESPONSE=$(curl -s -X POST \
+                        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                        -F "file=@/tmp/${SF_NAME}.zip" \
+                        "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/sharedflows?action=import&name=${SF_NAME}")
+                      REVISION=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['revision'])")
+
+                      curl -s -X POST \
+                        -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        "https://apigee.googleapis.com/v1/organizations/$(PROJECT_ID)/environments/${ENV}/sharedflows/${SF_NAME}/revisions/${REVISION}/deployments?override=true"
+                      echo "${SF_NAME} deployed to ${ENV}"
+                    }
+
+                    deploy_sf "security-common" "sharedflows/security-common" "$(PREPROD_ENV)"
+                    deploy_proxy "customer-accountholders-v1" "proxies/customer-accountholders-v1" "$(PREPROD_ENV)"
+                    deploy_proxy "customer-consent-validation-v1" "proxies/customer-consent-validation-v1" "$(PREPROD_ENV)"
+
+                    # Withdrawals — check flag
+                    if [ "$(WITHDRAWALS_DEPLOY_TO_PREPROD)" = "true" ]; then
+                      deploy_proxy "payment-momo-withdrawals-v1" "proxies/payment-momo-withdrawals-v1" "$(PREPROD_ENV)"
+                    else
+                      echo "Skipping payment-momo-withdrawals-v1 — WITHDRAWALS_DEPLOY_TO_PREPROD=false"
+                    fi
+
+                    deploy_proxy "payment-payments-v1" "proxies/payment-payments-v1" "$(PREPROD_ENV)"
+                    echo "=== All proxies deployed to preprod ==="
+                  displayName: 'Deploy to preprod'
+                  env:
+                    GCP_SERVICE_ACCOUNT_KEY_B64: $(GCP_SERVICE_ACCOUNT_KEY_B64)
+
+  # ── STAGE 5: Smoke Test preprod ───────────────────────────
+  - stage: SmokeTestPreprod
+    displayName: 'Smoke test preprod'
+    dependsOn: DeployPreprod
+    condition: succeeded()
+    jobs:
+      - job: SmokeTestPreprod
+        displayName: 'Run smoke tests against preprod'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - script: |
+              set -e
+              printf '%s' "$GCP_SERVICE_ACCOUNT_KEY_B64" | base64 -d > /tmp/sa-key.json
+              gcloud auth activate-service-account --key-file=/tmp/sa-key.json
+              gcloud config set project $(PROJECT_ID)
+
+              APP_KEY=$(gcloud secrets versions access latest \
+                --secret="red-preprod-app-key" --project=$(PROJECT_ID))
+              APP_SECRET=$(gcloud secrets versions access latest \
+                --secret="red-preprod-app-secret" --project=$(PROJECT_ID))
+
+              TOKEN=$(curl -q -s \
+                -u "${APP_KEY}:${APP_SECRET}" \
+                -H 'Content-Type: application/x-www-form-urlencoded' \
+                -X POST "https://$(PREPROD_HOST)/oauth/v1/token" \
+                -d 'grant_type=client_credentials' \
+                | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+
+              echo "Token acquired: ${TOKEN:0:8}..."
+              bash tests/smoke-test.sh $(PREPROD_HOST) $TOKEN
+            displayName: 'Smoke test preprod'
+            env:
+              GCP_SERVICE_ACCOUNT_KEY_B64: $(GCP_SERVICE_ACCOUNT_KEY_B64)
+EOF
