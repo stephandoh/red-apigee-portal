@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-CancelPreapproval">
+  <DisplayName>AM-Mock-CancelPreapproval</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+  "data": {
+    "preapprovalId": "PRE-233244000001-001",
+    "status": "CANCELLED",
+    "cancelledAt": "2026-05-03T11:00:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-ConsentValidation">
+  <DisplayName>AM-Mock-ConsentValidation</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "data": {
+    "sent": true,
+    "msisdn": "233244000001",
+    "consentStatus": "PENDING",
+    "flowType": "ussd",
+    "expiresAt": "2026-05-04T10:00:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

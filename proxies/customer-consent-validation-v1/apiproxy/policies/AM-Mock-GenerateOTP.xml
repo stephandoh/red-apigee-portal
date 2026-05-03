@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-GenerateOTP">
+  <DisplayName>AM-Mock-GenerateOTP</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "d4e5f6a7-b8c9-0123-defa-234567890123",
+  "data": {
+    "otpKey": "OTP-KEY-233244000001-abc123",
+    "notificationChannel": "sms",
+    "expiresAt": "2026-05-03T10:10:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-VerifyOTP">
+  <DisplayName>AM-Mock-VerifyOTP</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Success",
+  "transactionId": "e5f6a7b8-c9d0-1234-efab-345678901234",
+  "data": {
+    "verified": true,
+    "customerId": "233244000001",
+    "verifiedAt": "2026-05-03T10:05:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

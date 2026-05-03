@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RegularExpressionProtection continueOnError="false" enabled="true" name="RegexTP-ValidateMSISDN">
+  <DisplayName>RegexTP-ValidateMSISDN</DisplayName>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <URIPath>
+    <Pattern>.*\/consent\/2[0-9]{11}.*</Pattern>
+  </URIPath>
+</RegularExpressionProtection>
