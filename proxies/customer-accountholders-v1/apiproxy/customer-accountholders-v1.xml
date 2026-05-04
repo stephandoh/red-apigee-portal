@@ -10,6 +10,7 @@
     <Policy>AM-Mock-AccountholderProfile</Policy>
     <Policy>AM-Mock-ValidateAccountholder</Policy>
     <Policy>AM-Mock-VerifyAccountholder</Policy>
+    <Policy>AM-401Unauthorized</Policy>
     <Policy>AM-DefaultFaultResponse</Policy>
     <Policy>RF-404NotFound</Policy>
   </Policies>
