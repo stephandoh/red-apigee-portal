@@ -34,16 +34,16 @@ BODY=$(curl -s "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholde
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
 check "AccountHolders no token -> 401" "401" "$STATUS" "$BODY"
 
-BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001" -d '"'"'{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}'"'"')
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001" -d '"'"'{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}'"'"')
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001" -d '{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001" -d '{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}')
 check "Consent valid token -> 200" "200" "$STATUS" "$BODY"
 
-BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw" -d '"'"'{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}'"'"')
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw" -d '"'"'{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}'"'"')
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw" -d '{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw" -d '{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}')
 check "Withdrawals valid token -> 200" "200" "$STATUS" "$BODY"
 
-BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "countryCode: GH" -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments" -d '"'"'{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}'"'"')
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "countryCode: GH" -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments" -d '"'"'{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}'"'"')
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "countryCode: GH" -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments" -d '{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "countryCode: GH" -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments" -d '{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}')
 check "Payments valid token -> 200" "200" "$STATUS" "$BODY"
 
 BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/doesnotexist")
