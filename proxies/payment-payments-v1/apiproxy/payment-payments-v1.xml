@@ -11,6 +11,7 @@
     <Policy>AM-Mock-ReversePayment</Policy>
     <Policy>AM-Mock-TransactionStatus</Policy>
     <Policy>AM-Mock-CalculateFee</Policy>
+    <Policy>AM-401Unauthorized</Policy>
     <Policy>AM-DefaultFaultResponse</Policy>
     <Policy>RF-404NotFound</Policy>
   </Policies>
