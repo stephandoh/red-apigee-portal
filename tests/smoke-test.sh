@@ -15,35 +15,43 @@ check() {
   local desc=$1
   local expected=$2
   local actual=$3
+  local body=$4
   if [ "$actual" = "$expected" ]; then
     echo "PASS: $desc (${actual})"
     PASS=$((PASS+1))
   else
     echo "FAIL: $desc (expected ${expected}, got ${actual})"
+    echo "  Response: $body"
     FAIL=$((FAIL+1))
   fi
 }
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   -H "Authorization: Bearer ${TOKEN}"   "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
-check "AccountHolders valid token -> 200" "200" "$STATUS"
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
+check "AccountHolders valid token -> 200" "200" "$STATUS" "$BODY"
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
-check "AccountHolders no token -> 401" "401" "$STATUS"
+BODY=$(curl -s "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
+check "AccountHolders no token -> 401" "401" "$STATUS" "$BODY"
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   -H "Authorization: Bearer ${TOKEN}"   -H "Content-Type: application/json"   -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001"   -d "{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}")
-check "Consent valid token -> 200" "200" "$STATUS"
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001" -d '"'"'{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}'"'"')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/consent/v1/consent/233244000001" -d '"'"'{"flowType":"ussd","callbackUrl":"https://example.com","confirmationMessage":"Confirm?"}'"'"')
+check "Consent valid token -> 200" "200" "$STATUS" "$BODY"
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   -H "Authorization: Bearer ${TOKEN}"   -H "Content-Type: application/json"   -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw"   -d "{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}")
-check "Withdrawals valid token -> 200" "200" "$STATUS"
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw" -d '"'"'{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}'"'"')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/payment/withdrawals/v1/withdraw" -d '"'"'{"correlatorId":"test-001","callingSystem":"AYO","externalReference":"ext-001","customerId":"233244000001","status":"Pending"}'"'"')
+check "Withdrawals valid token -> 200" "200" "$STATUS" "$BODY"
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   -H "Authorization: Bearer ${TOKEN}"   -H "Content-Type: application/json"   -H "countryCode: GH"   -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments"   -d "{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}")
-check "Payments valid token -> 200" "200" "$STATUS"
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "countryCode: GH" -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments" -d '"'"'{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}'"'"')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "countryCode: GH" -X POST "https://${EXTERNAL_HOST}/payment/payments/v1/payments" -d '"'"'{"correlatorId":"test-001","amount":{"amount":10,"units":"GHS"}}'"'"')
+check "Payments valid token -> 200" "200" "$STATUS" "$BODY"
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   -H "Authorization: Bearer ${TOKEN}"   "https://${EXTERNAL_HOST}/customer/accountholders/v1/doesnotexist")
-check "Unknown path -> 404" "404" "$STATUS"
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/doesnotexist")
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/accountholders/v1/doesnotexist")
+check "Unknown path -> 404" "404" "$STATUS" "$BODY"
 
-STATUS=$(curl -s -o /dev/null -w "%{http_code}"   -X OPTIONS   -H "Origin: https://example.com"   -H "Access-Control-Request-Method: GET"   "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
-check "CORS preflight -> 200" "200" "$STATUS"
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X OPTIONS -H "Origin: https://example.com" -H "Access-Control-Request-Method: GET" "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
+check "CORS preflight -> 200" "200" "$STATUS" ""
 
 echo ""
 echo "Results: ${PASS} passed, ${FAIL} failed"
