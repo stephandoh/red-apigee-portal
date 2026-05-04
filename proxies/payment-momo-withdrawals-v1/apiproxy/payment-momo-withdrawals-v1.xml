@@ -8,6 +8,7 @@
     <Policy>JSONTP-RequestBodyProtection</Policy>
     <Policy>AM-Mock-Withdraw</Policy>
     <Policy>AM-401Unauthorized</Policy>
+    <Policy>AM-401Unauthorized</Policy>
     <Policy>AM-DefaultFaultResponse</Policy>
     <Policy>RF-404NotFound</Policy>
   </Policies>
