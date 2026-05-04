@@ -110,6 +110,8 @@ stages:
               deploy_proxy "payment-momo-withdrawals-v1" "proxies/payment-momo-withdrawals-v1" "$(EVAL_ENV)"
               deploy_proxy "payment-payments-v1" "proxies/payment-payments-v1" "$(EVAL_ENV)"
               echo "=== All proxies deployed to eval ==="
+              echo "Waiting 30 seconds for deployment to activate..."
+              sleep 30
             displayName: 'Deploy to eval'
             env:
               GCP_SERVICE_ACCOUNT_KEY_B64: $(GCP_SERVICE_ACCOUNT_KEY_B64)
