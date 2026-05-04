@@ -13,6 +13,7 @@
     <Policy>AM-Mock-GenerateOTP</Policy>
     <Policy>AM-Mock-VerifyOTP</Policy>
     <Policy>AM-401Unauthorized</Policy>
+    <Policy>AM-401Unauthorized</Policy>
     <Policy>AM-DefaultFaultResponse</Policy>
     <Policy>RF-404NotFound</Policy>
   </Policies>
