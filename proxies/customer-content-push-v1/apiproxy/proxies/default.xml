@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description/>
+  <FaultRules>
+    <FaultRule name="OAuthFault">
+      <Condition>(fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolvedAPIKey") or (fault.name = "invalid_access_token") or (fault.name = "access_token_expired") or (fault.name = "InvalidClientIdentifier")</Condition>
+      <Step><Name>AM-401Unauthorized</Name></Step>
+    </FaultRule>
+    <FaultRule name="DefaultFault">
+      <Condition>not ((fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "invalid_access_token") or (fault.name = "access_token_expired") or (fault.name = "InvalidClientIdentifier") or (fault.name = "RaiseFault"))</Condition>
+      <Step><Name>AM-DefaultFaultResponse</Name></Step>
+    </FaultRule>
+  </FaultRules>
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step><Name>FC-SecurityCommon</Name></Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <Flows>
+    <Flow name="sendSms">
+      <Description>Push SMS content to customer</Description>
+      <Request>
+        <Step>
+          <Condition>request.header.x-country-code = null</Condition>
+          <Name>RF-MissingCountryCode</Name>
+        </Step>
+        <Step><Name>JSONTP-RequestBodyProtection</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Mock-SendSms</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/contents/pushes") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="wigPush">
+      <Description>WIG Push to customer via Invigo</Description>
+      <Request>
+        <Step><Name>JSONTP-RequestBodyProtection</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Mock-WigPush</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/wig/push") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="404NotFound">
+      <Description>Catch all unmatched paths</Description>
+      <Request>
+        <Step><Name>RF-404NotFound</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+  </Flows>
+  <HTTPProxyConnection>
+    <BasePath>/customer/content/v1</BasePath>
+    <Properties/>
+  </HTTPProxyConnection>
+  <RouteRule name="NoRoute"/>
+</ProxyEndpoint>

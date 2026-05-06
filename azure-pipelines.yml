@@ -109,6 +109,7 @@ stages:
               deploy_proxy "customer-consent-validation-v1" "proxies/customer-consent-validation-v1" "$(EVAL_ENV)"
               deploy_proxy "payment-momo-withdrawals-v1" "proxies/payment-momo-withdrawals-v1" "$(EVAL_ENV)"
               deploy_proxy "payment-payments-v1" "proxies/payment-payments-v1" "$(EVAL_ENV)"
+              deploy_proxy "customer-content-push-v1" "proxies/customer-content-push-v1" "$(EVAL_ENV)"
               echo "=== All proxies deployed to eval ==="
               echo "Waiting 30 seconds for deployment to activate..."
               sleep 30
@@ -215,6 +216,7 @@ stages:
                       echo "Skipping withdrawals — WITHDRAWALS_DEPLOY_TO_PREPROD=false"
                     fi
                     deploy_proxy "payment-payments-v1" "proxies/payment-payments-v1" "$(PREPROD_ENV)"
+                    deploy_proxy "customer-content-push-v1" "proxies/customer-content-push-v1" "$(PREPROD_ENV)"
                     echo "=== All proxies deployed to preprod ==="
                   displayName: 'Deploy to preprod'
                   env:
