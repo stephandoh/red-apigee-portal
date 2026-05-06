@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock-SendSms">
+  <DisplayName>AM-Mock-SendSms</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{
+  "statusCode": "0000",
+  "statusMessage": "Send Sms is in progress",
+  "transactionId": "0987777896789999781",
+  "data": {
+    "customerId": "233244000001",
+    "channel": "SMS",
+    "status": "PENDING",
+    "sentAt": "2026-05-04T10:00:00Z"
+  }
+}</Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

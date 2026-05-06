@@ -53,6 +53,14 @@ check "Unknown path -> 404" "404" "$STATUS" "$BODY"
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X OPTIONS -H "Origin: https://example.com" -H "Access-Control-Request-Method: GET" "https://${EXTERNAL_HOST}/customer/accountholders/v1/accountholders/233244000001")
 check "CORS preflight -> 200" "200" "$STATUS" ""
 
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "x-country-code: GH" -H "targetSystem: ECW" -X POST "https://${EXTERNAL_HOST}/customer/content/v1/contents/pushes" -d '{"customerId":"233244000001","channel":"SMS","subscriptionId":"sub-001","contentProviderId":"cp-001","messageContent":"Hello from RED Ghana"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -H "x-country-code: GH" -H "targetSystem: ECW" -X POST "https://${EXTERNAL_HOST}/customer/content/v1/contents/pushes" -d '{"customerId":"233244000001","channel":"SMS","subscriptionId":"sub-001","contentProviderId":"cp-001","messageContent":"Hello from RED Ghana"}')
+check "Content Push sendSms -> 200" "200" "$STATUS" "$BODY"
+
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/content/v1/wig/push" -d '{"msisdn":"233244000001","command":"SIM_ADV"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/content/v1/wig/push" -d '{"msisdn":"233244000001","command":"SIM_ADV"}')
+check "Content Push wigPush -> 200" "200" "$STATUS" "$BODY"
+
 echo ""
 echo "Results: ${PASS} passed, ${FAIL} failed"
 [ "${FAIL}" -gt "0" ] && exit 1
