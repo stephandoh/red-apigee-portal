@@ -2,7 +2,7 @@
 <CORS continueOnError="false" enabled="true" name="CORS-AddCORS">
   <AllowOrigins>{request.header.origin}</AllowOrigins>
   <AllowMethods>GET, PUT, POST, DELETE, PATCH, OPTIONS</AllowMethods>
-  <AllowHeaders>origin, x-requested-with, accept, content-type, authorization, apikey, transactionId, x-api-key, x-authorization, authorizationData, countryCode</AllowHeaders>
+  <AllowHeaders>origin, x-requested-with, accept, content-type, authorization, apikey, transactionId, x-api-key, x-authorization, authorizationData, countryCode, x-country-code, targetSystem, action</AllowHeaders>
   <ExposeHeaders>*</ExposeHeaders>
   <MaxAge>3628800</MaxAge>
   <AllowCredentials>false</AllowCredentials>
