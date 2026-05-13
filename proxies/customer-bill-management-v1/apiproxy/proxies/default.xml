@@ -18,7 +18,7 @@
                     <Name>AM-GetCustomerBill</Name>
                 </Step>
             </Response>
-            <Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "GET")</Condition>
+            <Condition>(proxy.pathsuffix = "/") and (request.verb = "GET") or (proxy.pathsuffix = "") and (request.verb = "GET")</Condition>
         </Flow>
         <Flow name="GetCustomerBillById">
             <Description>Retrieves a CustomerBill by ID</Description>
