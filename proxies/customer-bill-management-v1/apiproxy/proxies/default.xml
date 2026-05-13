@@ -18,7 +18,7 @@
                     <Name>AM-GetCustomerBillById</Name>
                 </Step>
             </Response>
-            <Condition>(proxy.pathsuffix MatchesPath "/*") and (request.verb = "GET")</Condition>
+            <Condition>(proxy.pathsuffix JavaRegex "/[^/]+") and (request.verb = "GET")</Condition>
         </Flow>
         <Flow name="PatchCustomerBillById">
             <Description>Updates a CustomerBill by ID</Description>
@@ -32,7 +32,7 @@
                     <Name>AM-PatchCustomerBillById</Name>
                 </Step>
             </Response>
-            <Condition>(proxy.pathsuffix MatchesPath "/*") and (request.verb = "PATCH")</Condition>
+            <Condition>(proxy.pathsuffix JavaRegex "/[^/]+") and (request.verb = "PATCH")</Condition>
         </Flow>
         <Flow name="GetCustomerBill">
             <Description>List or find CustomerBills</Description>
