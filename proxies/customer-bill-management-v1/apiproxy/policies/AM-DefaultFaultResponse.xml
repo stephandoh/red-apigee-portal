@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-DefaultFaultResponse">
+    <DisplayName>AM-DefaultFaultResponse</DisplayName>
+    <Set>
+        <StatusCode>500</StatusCode>
+        <ReasonPhrase>Internal Server Error</ReasonPhrase>
+        <Headers>
+            <Header name="Content-Type">application/json</Header>
+        </Headers>
+        <Payload contentType="application/json">{
+    "timestamp": "{system.timestamp}",
+    "status": "500",
+    "error": "Internal Server Error",
+    "message": "An unexpected error occurred. Please try again later.",
+    "path": "{request.uri}"
+}</Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

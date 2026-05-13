@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-404NotFound">
+    <DisplayName>RF-404NotFound</DisplayName>
+    <FaultResponse>
+        <Set>
+            <StatusCode>404</StatusCode>
+            <ReasonPhrase>Not Found</ReasonPhrase>
+            <Headers>
+                <Header name="Content-Type">application/json</Header>
+            </Headers>
+            <Payload contentType="application/json">{
+    "timestamp": "{system.timestamp}",
+    "status": "404",
+    "error": "Not Found",
+    "message": "The requested resource could not be found",
+    "path": "{request.uri}"
+}</Payload>
+        </Set>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

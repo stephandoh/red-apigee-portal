@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-GetCustomerBill">
+    <DisplayName>AM-GetCustomerBill</DisplayName>
+    <Set>
+        <StatusCode>200</StatusCode>
+        <ReasonPhrase>OK</ReasonPhrase>
+        <Headers>
+            <Header name="Content-Type">application/json</Header>
+        </Headers>
+        <Payload contentType="application/json">{
+    "result": {
+        "resultCode": "0000",
+        "resultDescription": "Successfully processed",
+        "transactionId": "6f0bece6-7df3-4da4-af02-5e7f16e5e6fc"
+    },
+    "customerBills": [
+        {
+            "id": "BILL-001",
+            "billDate": "2026-01-01",
+            "nextBillDate": "2026-02-01",
+            "billingPeriod": {
+                "startDate": "2025-12-01",
+                "endDate": "2025-12-31"
+            },
+            "amountDue": {
+                "unit": "GHS",
+                "value": 150.00
+            },
+            "paymentDueDate": "2026-01-15",
+            "status": "unpaid"
+        }
+    ]
+}</Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
