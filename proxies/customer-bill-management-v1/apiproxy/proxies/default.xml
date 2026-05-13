@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ProxyEndpoint name="default">
     <Description>Customer Bill Management Proxy Endpoint</Description>
+    <FaultRules>
+        <FaultRule name="OAuthFault">
+            <Condition>(fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "invalid_access_token") or (fault.name = "access_token_expired") or (fault.name = "InvalidClientIdentifier")</Condition>
+            <Step><Name>AM-401Unauthorized</Name></Step>
+        </FaultRule>
+        <FaultRule name="DefaultFault">
+            <Condition>not ((fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "invalid_access_token") or (fault.name = "access_token_expired") or (fault.name = "InvalidClientIdentifier") or (fault.name = "RaiseFault"))</Condition>
+            <Step><Name>AM-DefaultFaultResponse</Name></Step>
+        </FaultRule>
+    </FaultRules>
     <PreFlow name="PreFlow">
         <Request>
-            <Step>
-                <Name>FC-SecurityCommon</Name>
-            </Step>
+            <Step><Name>FC-SecurityCommon</Name></Step>
         </Request>
         <Response/>
     </PreFlow>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response/>
+    </PostFlow>
     <Flows>
         <Flow name="GetCustomerBillById">
             <Description>Retrieves a CustomerBill by ID</Description>
             <Request/>
             <Response>
-                <Step>
-                    <Name>AM-GetCustomerBillById</Name>
-                </Step>
+                <Step><Name>AM-GetCustomerBillById</Name></Step>
             </Response>
             <Condition>(proxy.pathsuffix JavaRegex "/[^/]+") and (request.verb = "GET")</Condition>
         </Flow>
         <Flow name="PatchCustomerBillById">
             <Description>Updates a CustomerBill by ID</Description>
             <Request>
-                <Step>
-                    <Name>JSONTP-Request</Name>
-                </Step>
+                <Step><Name>JSONTP-Request</Name></Step>
             </Request>
             <Response>
-                <Step>
-                    <Name>AM-PatchCustomerBillById</Name>
-                </Step>
+                <Step><Name>AM-PatchCustomerBillById</Name></Step>
             </Response>
             <Condition>(proxy.pathsuffix JavaRegex "/[^/]+") and (request.verb = "PATCH")</Condition>
         </Flow>
@@ -38,40 +44,18 @@
             <Description>List or find CustomerBills</Description>
             <Request/>
             <Response>
-                <Step>
-                    <Name>AM-GetCustomerBill</Name>
-                </Step>
+                <Step><Name>AM-GetCustomerBill</Name></Step>
             </Response>
             <Condition>request.verb = "GET"</Condition>
         </Flow>
         <Flow name="UnknownRequest">
             <Description>Catch all unknown requests</Description>
             <Request>
-                <Step>
-                    <Name>RF-404NotFound</Name>
-                </Step>
+                <Step><Name>RF-404NotFound</Name></Step>
             </Request>
             <Response/>
         </Flow>
     </Flows>
-    <PostFlow name="PostFlow">
-        <Request/>
-        <Response/>
-    </PostFlow>
-    <FaultRules>
-        <FaultRule name="UnauthorizedRequest">
-            <Step>
-                <Name>AM-401Unauthorized</Name>
-            </Step>
-            <Condition>(fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey")</Condition>
-        </FaultRule>
-    </FaultRules>
-    <DefaultFaultRule name="DefaultFaultRule">
-        <AlwaysEnforce>true</AlwaysEnforce>
-        <Step>
-            <Name>AM-DefaultFaultResponse</Name>
-        </Step>
-    </DefaultFaultRule>
     <HTTPProxyConnection>
         <BasePath>/customer/bill/v1</BasePath>
     </HTTPProxyConnection>
