@@ -30,16 +30,6 @@
             </Response>
             <Condition>(proxy.pathsuffix JavaRegex "/[^/]+") and (request.verb = "GET")</Condition>
         </Flow>
-        <Flow name="PatchCustomerBillById">
-            <Description>Updates a CustomerBill by ID</Description>
-            <Request>
-                <Step><Name>JSONTP-Request</Name></Step>
-            </Request>
-            <Response>
-                <Step><Name>AM-PatchCustomerBillById</Name></Step>
-            </Response>
-            <Condition>(proxy.pathsuffix JavaRegex "/[^/]+") and (request.verb = "PATCH")</Condition>
-        </Flow>
         <Flow name="GetCustomerBill">
             <Description>List or find CustomerBills</Description>
             <Request/>
