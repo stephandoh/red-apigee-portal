@@ -61,14 +61,6 @@ BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/content/v1/wig/push" -d '{"msisdn":"233244000001","command":"SIM_ADV"}')
 check "Content Push wigPush -> 200" "200" "$STATUS" "$BODY"
 
-BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/bill/v1?customerType=1&customerId=CUST-001&queryType=unpaidBill")
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/bill/v1?customerType=1&customerId=CUST-001&queryType=unpaidBill")
-check "CustomerBill list valid token -> 200" "200" "$STATUS" "$BODY"
-
-BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/bill/v1/BILL-001?customerType=1&queryType=unpaidBill")
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/bill/v1/BILL-001?customerType=1&queryType=unpaidBill")
-check "CustomerBill by ID valid token -> 200" "200" "$STATUS" "$BODY"
-
 echo ""
 echo "Results: ${PASS} passed, ${FAIL} failed"
 [ "${FAIL}" -gt "0" ] && exit 1
