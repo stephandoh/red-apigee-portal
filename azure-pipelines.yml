@@ -113,7 +113,7 @@ stages:
               deploy_proxy "customer-bill-management-v1" "proxies/customer-bill-management-v1" "$(EVAL_ENV)"
               echo "=== All proxies deployed to eval ==="
               echo "Waiting 60 seconds for deployment to activate..."
-              sleep 60
+              sleep 90
             displayName: 'Deploy to eval'
             env:
               GCP_SERVICE_ACCOUNT_KEY_B64: $(GCP_SERVICE_ACCOUNT_KEY_B64)
