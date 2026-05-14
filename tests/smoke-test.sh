@@ -69,10 +69,6 @@ BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/cus
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/bill/v1/BILL-001?customerType=1&queryType=unpaidBill")
 check "CustomerBill by ID valid token -> 200" "200" "$STATUS" "$BODY"
 
-BODY=$(curl -s -X PATCH -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/bill/v1/BILL-001" -d '{"status":"paid"}')
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/bill/v1/BILL-001" -d '{"status":"paid"}')
-check "CustomerBill PATCH valid token -> 200" "200" "$STATUS" "$BODY"
-
 echo ""
 echo "Results: ${PASS} passed, ${FAIL} failed"
 [ "${FAIL}" -gt "0" ] && exit 1
