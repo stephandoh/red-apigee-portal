@@ -138,6 +138,8 @@ stages:
               gcloud config set project $(PROJECT_ID)
               APP_KEY=$(EVAL_APP_KEY)
               APP_SECRET=$(EVAL_APP_SECRET)
+              echo "Testing connectivity..."
+              curl -v "https://$(EVAL_HOST)/oauth/v1/token" 2>&1 | head -20 || true
               TOKEN=$(curl -q -s \
                 -u "${APP_KEY}:${APP_SECRET}" \
                 -H 'Content-Type: application/x-www-form-urlencoded' \
@@ -248,6 +250,8 @@ stages:
               gcloud config set project $(PROJECT_ID)
               APP_KEY=$(PREPROD_APP_KEY)
               APP_SECRET=$(PREPROD_APP_SECRET)
+              echo "Testing connectivity..."
+              curl -v "https://$(EVAL_HOST)/oauth/v1/token" 2>&1 | head -20 || true
               TOKEN=$(curl -q -s \
                 -u "${APP_KEY}:${APP_SECRET}" \
                 -H 'Content-Type: application/x-www-form-urlencoded' \
