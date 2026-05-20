@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-GetCustomers">
+    <DisplayName>AM-GetCustomers</DisplayName>
+    <Set>
+        <StatusCode>200</StatusCode>
+        <ReasonPhrase>OK</ReasonPhrase>
+        <Headers>
+            <Header name="Content-Type">application/json</Header>
+        </Headers>
+        <Payload contentType="application/json">{
+    "statusCode": "0000",
+    "statusMessage": "Successfully processed",
+    "transactionId": "e938-300949-394999-39993",
+    "data": [
+        {
+            "msisdn": "233244000001",
+            "verificationStatus": "VERIFIED",
+            "firstName": "John",
+            "lastName": "Doe"
+        }
+    ]
+}</Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
