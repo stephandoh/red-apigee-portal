@@ -1,6 +1,6 @@
 # RED Ghana Portal
 
-Apigee X proxy bundles and developer portal for the RED MTN Ghana API Platform.
+Apigee X proxy bundles and developer portal for the RED Ghana API Platform.
 
 ## Live Portal
 
