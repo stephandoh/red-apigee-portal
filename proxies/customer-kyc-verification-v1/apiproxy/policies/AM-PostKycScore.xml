@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-PostKycScore">
+    <DisplayName>AM-PostKycScore</DisplayName>
+    <Set>
+        <StatusCode>200</StatusCode>
+        <ReasonPhrase>OK</ReasonPhrase>
+        <Headers>
+            <Header name="Content-Type">application/json</Header>
+        </Headers>
+        <Payload contentType="application/json">{
+    "statusCode": "0000",
+    "statusMessage": "Successfully processed",
+    "transactionId": "e938-300949-394999-39993",
+    "data": {
+        "msisdn": "233244000001",
+        "kycScore": 95,
+        "firstName": {
+            "value": "John",
+            "score": 100
+        },
+        "lastName": {
+            "value": "Doe",
+            "score": 90
+        },
+        "dateOfBirth": {
+            "value": "1990-01-01",
+            "score": 95
+        }
+    }
+}</Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

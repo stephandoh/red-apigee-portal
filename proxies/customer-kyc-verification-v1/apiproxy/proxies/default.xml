@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+    <Description>Customer KYC Verification Proxy Endpoint</Description>
+    <FaultRules>
+        <FaultRule name="OAuthFault">
+            <Condition>(fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "invalid_access_token") or (fault.name = "access_token_expired") or (fault.name = "InvalidClientIdentifier")</Condition>
+            <Step><Name>AM-401Unauthorized</Name></Step>
+        </FaultRule>
+        <FaultRule name="DefaultFault">
+            <Condition>not ((fault.name = "InvalidAccessToken") or (fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "invalid_access_token") or (fault.name = "access_token_expired") or (fault.name = "InvalidClientIdentifier") or (fault.name = "RaiseFault"))</Condition>
+            <Step><Name>AM-DefaultFaultResponse</Name></Step>
+        </FaultRule>
+    </FaultRules>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step><Name>FC-SecurityCommon</Name></Step>
+        </Request>
+        <Response/>
+    </PreFlow>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response/>
+    </PostFlow>
+    <Flows>
+        <Flow name="PostKycScore">
+            <Description>KYC score verification for a customer</Description>
+            <Request>
+                <Step><Name>JSONTP-Request</Name></Step>
+            </Request>
+            <Response>
+                <Step><Name>AM-PostKycScore</Name></Step>
+            </Response>
+            <Condition>(proxy.pathsuffix MatchesPath "/customers/*/kycScore") and (request.verb = "POST")</Condition>
+        </Flow>
+        <Flow name="PostNameScore">
+            <Description>Name score verification for a customer</Description>
+            <Request>
+                <Step><Name>JSONTP-Request</Name></Step>
+            </Request>
+            <Response>
+                <Step><Name>AM-PostNameScore</Name></Step>
+            </Response>
+            <Condition>(proxy.pathsuffix MatchesPath "/customers/*/nameScore") and (request.verb = "POST")</Condition>
+        </Flow>
+        <Flow name="PostCustomerById">
+            <Description>Verify single customer KYC by ID</Description>
+            <Request>
+                <Step><Name>JSONTP-Request</Name></Step>
+            </Request>
+            <Response>
+                <Step><Name>AM-PostCustomerById</Name></Step>
+            </Response>
+            <Condition>(proxy.pathsuffix MatchesPath "/customers/*") and (request.verb = "POST")</Condition>
+        </Flow>
+        <Flow name="GetCustomerById">
+            <Description>Check if customer MSISDN is active</Description>
+            <Request/>
+            <Response>
+                <Step><Name>AM-GetCustomerById</Name></Step>
+            </Response>
+            <Condition>(proxy.pathsuffix MatchesPath "/customers/*") and (request.verb = "GET")</Condition>
+        </Flow>
+        <Flow name="PostCustomers">
+            <Description>Verify multiple customers by JSON body</Description>
+            <Request>
+                <Step><Name>JSONTP-Request</Name></Step>
+            </Request>
+            <Response>
+                <Step><Name>AM-PostCustomers</Name></Step>
+            </Response>
+            <Condition>(proxy.pathsuffix = "/customers") and (request.verb = "POST")</Condition>
+        </Flow>
+        <Flow name="GetCustomers">
+            <Description>Verify multiple customers by BVN array</Description>
+            <Request/>
+            <Response>
+                <Step><Name>AM-GetCustomers</Name></Step>
+            </Response>
+            <Condition>(proxy.pathsuffix = "/customers") and (request.verb = "GET")</Condition>
+        </Flow>
+        <Flow name="UnknownRequest">
+            <Description>Catch all unknown requests</Description>
+            <Request>
+                <Step><Name>RF-404NotFound</Name></Step>
+            </Request>
+            <Response/>
+        </Flow>
+    </Flows>
+    <HTTPProxyConnection>
+        <BasePath>/customer/kyc/v1</BasePath>
+    </HTTPProxyConnection>
+    <RouteRule name="NoRoute"/>
+</ProxyEndpoint>

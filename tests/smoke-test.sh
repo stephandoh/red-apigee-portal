@@ -61,6 +61,30 @@ BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST "https://${EXTERNAL_HOST}/customer/content/v1/wig/push" -d '{"msisdn":"233244000001","command":"SIM_ADV"}')
 check "Content Push wigPush -> 200" "200" "$STATUS" "$BODY"
 
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers")
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers")
+check "KYC GetCustomers valid token -> 200" "200" "$STATUS" "$BODY"
+
+BODY=$(curl -s -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers" -d '{"customers":[{"msisdn":"233244000001"}]}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers" -d '{"customers":[{"msisdn":"233244000001"}]}')
+check "KYC PostCustomers valid token -> 200" "200" "$STATUS" "$BODY"
+
+BODY=$(curl -s -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001?isConsentVerified=TRUE" -d '{"firstName":"John","lastName":"Doe"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001?isConsentVerified=TRUE" -d '{"firstName":"John","lastName":"Doe"}')
+check "KYC PostCustomerById valid token -> 200" "200" "$STATUS" "$BODY"
+
+BODY=$(curl -s -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001")
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${TOKEN}" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001")
+check "KYC GetCustomerById valid token -> 200" "200" "$STATUS" "$BODY"
+
+BODY=$(curl -s -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001/kycScore" -d '{"firstName":"John","lastName":"Doe"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001/kycScore" -d '{"firstName":"John","lastName":"Doe"}')
+check "KYC PostKycScore valid token -> 200" "200" "$STATUS" "$BODY"
+
+BODY=$(curl -s -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001/nameScore" -d '{"firstName":"John","lastName":"Doe"}')
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" "https://${EXTERNAL_HOST}/customer/kyc/v1/customers/233244000001/nameScore" -d '{"firstName":"John","lastName":"Doe"}')
+check "KYC PostNameScore valid token -> 200" "200" "$STATUS" "$BODY"
+
 echo ""
 echo "Results: ${PASS} passed, ${FAIL} failed"
 [ "${FAIL}" -gt "0" ] && exit 1

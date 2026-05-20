@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-401Unauthorized">
+    <DisplayName>AM-401Unauthorized</DisplayName>
+    <Set>
+        <StatusCode>401</StatusCode>
+        <ReasonPhrase>Unauthorized</ReasonPhrase>
+        <Headers>
+            <Header name="Content-Type">application/json</Header>
+        </Headers>
+        <Payload contentType="application/json">{
+    "statusCode": "4000",
+    "statusMessage": "Unauthorized",
+    "supportMessage": "Invalid or missing access token",
+    "transactionId": "{request.header.transactionId}",
+    "timestamp": "{system.timestamp}",
+    "path": "{request.uri}"
+}</Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
